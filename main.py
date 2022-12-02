@@ -1,61 +1,31 @@
-import words_fetcher
-import random
+num1 = [*map(int, input("Enter number 1: "))]
+num2 = [*map(int, input("Enter number 2: "))]
+
+print(num1)
+#num1 = num1[::-1]
+print(num1)
+#num2 = num2[::-1]
 
 
-def congratulate_user():
-    print(f"Congratulations, you won! your words: {guesses}")
+size = max(len(num1), len(num2))
+
+num1 += [0] * (size - len(num1))
+num2 += [0] * (size - len(num2))
 
 
-def is_game_over():
-    return guessed == WORDS_TO_WIN or errors == ERRORS_TO_LOSE
+overflow = 0
+res = []
+for obj in zip(num1, num2):
+    value = obj[0] + obj[1] + overflow
+    overflow = value // 2
+    res.append(value % 2)
+
+if overflow == 1:
+    res.append(1)
+
+res = res[::-1]
+
+print(''.join(map(str, res)))
 
 
-def guess_is_valid(candidate):
-    for letter in candidate:
-        if letter not in word:
-            print(f"You can not use letter {letter}")
-            return False
-        count = word.count(letter)
-        if count < candidate.count(letter):
-            print(f"You can use letter {letter} only {count} times")
-            return False
-    return True
-
-
-guessed = 0
-errors = 0
-
-guesses = []
-
-WORDS_TO_WIN = 5
-ERRORS_TO_LOSE = 3
-
-words = words_fetcher.fetch_words(min_letters=9, max_letters=9)
-full_list = words_fetcher.fetch_words(min_letters=3, max_letters=9)
-word = words[random.randrange(0, len(words))]
-
-print(f"Can you make up {WORDS_TO_WIN} words from letters in word provided by me?")
-print(f"Your word is '{word}'")
-
-
-while not is_game_over():
-    guess = input("Your next take: ")
-
-    if not guess_is_valid(guess):
-        continue
-
-    if guess in full_list:
-        guessed += 1
-        guesses.append(guess)
-        if guessed == WORDS_TO_WIN:
-            congratulate_user()
-            exit()
-        print(f"That's right! {WORDS_TO_WIN - guessed} to go")
-        if guessed == guessed:
-            print ("You can not enter the same word")
-    else:
-        errors += 1
-        print(f"Oops :( No such word, you have {ERRORS_TO_LOSE - errors} lives more")
-
-if ERRORS_TO_LOSE == 3:
-    print ("You lose :(")
+(1,1) (0,0) (1,1)
